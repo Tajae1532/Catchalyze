@@ -107,20 +107,20 @@ class CustomerWhispererClient:
             },
         )
         await notify("notifications/initialized", {})
-        print("✅ MCP session initialized.")
+        print("MCP session initialized.")
 
     async def get_available_tools(self):
         if self._tools_cache is None:
             res = await rpc("tools/list")
 
-            # ✅ Handle your current backend format
+            # Handle current backend format
             if isinstance(res, dict) and "tools" in res and isinstance(res["tools"], list):
                 self._tools_cache = res["tools"]
                 for t in self._tools_cache:
                     if "outputSchema" in t:
                         self._schemas[t["name"]] = t["outputSchema"]
 
-            # ✅ Handle MCP content array format
+            # Handle MCP content array format
             elif isinstance(res, dict) and "content" in res:
                 self._tools_cache = [
                     item.get("tool_definition", item)
@@ -131,7 +131,7 @@ class CustomerWhispererClient:
                     if "schema" in t:
                         self._schemas[t["name"]] = t["schema"]
 
-            # ✅ Handle plain list of tools
+            # Handle plain list of tools
             elif isinstance(res, list):
                 self._tools_cache = res
                 for t in self._tools_cache:
@@ -148,11 +148,11 @@ class CustomerWhispererClient:
         if name in self._schemas:
             try:
                 jsonschema_validate(instance=result, schema=self._schemas[name])
-                print(f"✅ Output from {name} matches schema.")
+                print(f"Output from {name} matches schema.")
             except ValidationError as e:
-                print(f"❌ Schema validation failed for {name}: {e.message}")
+                print(f"Schema validation failed for {name}: {e.message}")
         else:
-            print(f"⚠️ No schema found for {name}, skipping validation.")
+            print(f"No schema found for {name}, skipping validation.")
         return result
 
 

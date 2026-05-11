@@ -22,7 +22,7 @@ def rpc(method, params):
     r = requests.post(f"{MCP_URL}/mcp", json=payload, headers=HEADERS)
     txt = r.text.strip()
 
-    # ✅ Detect SSE anywhere, not just at start
+    # Detect SSE anywhere, not just at start
     if "event: message" in txt and "data:" in txt:
         data_line = next((line for line in txt.splitlines() if line.startswith("data: ")), None)
         if not data_line:
@@ -42,7 +42,7 @@ def call_generate(model):
     return rpc("tools/call", {
         "name": "generate_customer_insights",
         "arguments": {
-            "llm_model": model,  # ✅ matches your server signature
+            "llm_model": model,  # matches server signature
             "time_range": "7d"
         }
     })

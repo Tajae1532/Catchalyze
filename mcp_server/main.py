@@ -5533,7 +5533,7 @@ async def test_volume_spike_detection(results: dict):
         results["trend_detection_success"].append(trend_detected)
         
         if trend_detected:
-            print(f"[EVAL] ✅ Volume spike detected in {latency:.1f}s")
+            print(f"[EVAL] [PASS] Volume spike detected in {latency:.1f}s")
             results["test_scenarios"].append({
                 "scenario": "volume_spike",
                 "status": "PASS",
@@ -5541,7 +5541,7 @@ async def test_volume_spike_detection(results: dict):
                 "trends_found": len(trends)
             })
         else:
-            print(f"[EVAL] ❌ Volume spike NOT detected in {latency:.1f}s")
+            print(f"[EVAL] [FAIL] Volume spike NOT detected in {latency:.1f}s")
             results["test_scenarios"].append({
                 "scenario": "volume_spike", 
                 "status": "FAIL",
@@ -5584,14 +5584,14 @@ async def test_sentiment_drop_detection(results: dict):
         sentiment_trends = [t for t in trends if t.get("sentiment_drop")]
         
         if sentiment_trends:
-            print(f"[EVAL] ✅ Sentiment drop detected")
+            print(f"[EVAL] [PASS] Sentiment drop detected")
             results["test_scenarios"].append({
                 "scenario": "sentiment_drop",
                 "status": "PASS", 
                 "trends_found": len(sentiment_trends)
             })
         else:
-            print(f"[EVAL] ❌ Sentiment drop NOT detected")
+            print(f"[EVAL] [FAIL] Sentiment drop NOT detected")
             results["test_scenarios"].append({
                 "scenario": "sentiment_drop",
                 "status": "FAIL",
@@ -5632,14 +5632,14 @@ async def test_false_positive_rate(results: dict):
         results["false_positive_rate"].append(false_positives)
         
         if false_positives == 0:
-            print(f"[EVAL] ✅ No false positives detected")
+            print(f"[EVAL] [PASS] No false positives detected")
             results["test_scenarios"].append({
                 "scenario": "false_positive",
                 "status": "PASS",
                 "false_positives": 0
             })
         else:
-            print(f"[EVAL] ⚠️ {false_positives} false positives detected")
+            print(f"[EVAL] [WARN] {false_positives} false positives detected")
             results["test_scenarios"].append({
                 "scenario": "false_positive",
                 "status": "WARNING",
@@ -6775,10 +6775,10 @@ Application submitted: {datetime.now().strftime("%Y-%m-%d %H:%M:%S")}
             server.send_message(msg)
             server.quit()
             
-            print(f"✅ Email sent successfully to support@catchalyze.com")
+            print(f"Email sent successfully to support@catchalyze.com")
             
         except Exception as e:
-            print(f"❌ Failed to send email: {e}")
+            print(f"Failed to send email: {e}")
             # Console log serves as backup
 
 async def approve_beta_user(email: str):

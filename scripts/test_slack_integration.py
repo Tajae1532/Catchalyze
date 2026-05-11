@@ -13,7 +13,7 @@ async def test_slack_endpoints():
     """Test the Slack OAuth and Events API endpoints"""
     base_url = "http://localhost:8000"
     
-    print("🔍 Testing Slack Integration Endpoints")
+    print("Testing Slack Integration Endpoints")
     print("=" * 50)
     
     async with httpx.AsyncClient() as client:
@@ -27,12 +27,12 @@ async def test_slack_endpoints():
             print(f"   Slack configured: {health_data.get('slack_configured', False)}")
             
             if not health_data.get('slack_configured'):
-                print("   ⚠️  Slack not configured - check environment variables")
+                print("   Slack not configured - check environment variables")
             else:
-                print("   ✅ Slack configuration detected")
+                print("   Slack configuration detected")
             
         except Exception as e:
-            print(f"   ❌ Health check failed: {e}")
+            print(f"   Health check failed: {e}")
         
         # Test OAuth start endpoint (should redirect)
         try:

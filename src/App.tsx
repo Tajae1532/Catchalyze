@@ -405,7 +405,7 @@ function RadarPanel({ data, realtimeActivity = [], sseConnected }: {
 
   const systemHealth = (data as any).insights?.filter((insight: any) => insight.type === 'trend')?.map((insight: any) => ({
     topic: insight.title || insight.keywords?.join(' ') || 'Unknown',
-    status: insight.severity === 'high' ? '🔴' : insight.severity === 'medium' ? '🟡' : '🟢',
+    status: insight.severity === 'high' ? 'high' : insight.severity === 'medium' ? 'medium' : 'low',
     count: insight.evidence_counts?.total || 0,
     severity: insight.severity || 'low'
   })) || [];
@@ -449,7 +449,7 @@ function RadarPanel({ data, realtimeActivity = [], sseConnected }: {
   if (featMentions >= 3) {
     const latest = allItems.find(i => featureWords.some(w => i.text.includes(w)));
     signals.push({
-      icon: '💡',
+      icon: 'insight',
       title: `${toTime(latest?.at || new Date().toISOString())} — Feature request spike`,
       subtitle: `"Export" or related — ${featMentions} mentions`,
     });
@@ -459,7 +459,7 @@ function RadarPanel({ data, realtimeActivity = [], sseConnected }: {
   if (countPos >= countNeg + 2) {
     const latestPos = allItems.find(i => (i.sentiment ?? 0) > 0.2);
     signals.push({
-      icon: '😊',
+      icon: 'positive',
       title: `${toTime(latestPos?.at || new Date().toISOString())} — Satisfaction uptick`,
       subtitle: `Positive feedback outweighs negatives (+${(countPos - countNeg)})`,
     });
@@ -468,7 +468,7 @@ function RadarPanel({ data, realtimeActivity = [], sseConnected }: {
   // Volume quiet (few total signals)
   if (allItems.length <= 3) {
     signals.push({
-      icon: '🔇',
+      icon: 'quiet',
       title: `${toTime(new Date().toISOString())} — Volume quiet`,
       subtitle: `Signals ${allItems.length} in last 2h (below usual)`,
     });
@@ -477,7 +477,7 @@ function RadarPanel({ data, realtimeActivity = [], sseConnected }: {
   // Fallback if none detected
   if (signals.length === 0) {
     signals.push({
-      icon: '🔵',
+      icon: 'info',
       title: 'Volume quiet',
       subtitle: 'No noteworthy signals in last 2h',
     });
@@ -486,7 +486,7 @@ function RadarPanel({ data, realtimeActivity = [], sseConnected }: {
   // Health Monitors (keyword counts)
   const mon = (words: string[]) => {
     const n = countMatches(words);
-    return n === 0 ? { dot: '🟢', label: 'Clear' } : { dot: n >= 3 ? '🟠' : '🟡', label: `${n} mention${n > 1 ? 's' : ''}` };
+    return n === 0 ? { dot: 'clear', label: 'Clear' } : { dot: n >= 3 ? 'elevated' : 'warning', label: `${n} mention${n > 1 ? 's' : ''}` };
   };
   const login = mon(loginWords);
   const payment = mon(payWords);
@@ -523,7 +523,7 @@ function RadarPanel({ data, realtimeActivity = [], sseConnected }: {
             variant={data.overview.critical_insights > 0 ? 'destructive' : 'default'}
             className={data.overview.critical_insights > 0 ? 'animate-pulse bg-red-600 text-white font-bold text-sm px-3 py-1 shadow-lg' : ''}
           >
-            {data.overview.critical_insights > 0 ? '🚨 Attention Required' : 'All Clear'}
+            {data.overview.critical_insights > 0 ? 'Attention Required' : 'All Clear'}
           </Badge>
         </CardTitle>
       </CardHeader>
@@ -570,9 +570,8 @@ function RadarPanel({ data, realtimeActivity = [], sseConnected }: {
               realtimeActivity.slice(0, 3).map((activity, index) => (
                 <div key={activity.id || `activity-${index}`} className="border rounded p-3 text-sm bg-blue-50/50 border-blue-200">
                   <div className="font-semibold text-slate-900 flex items-center gap-1">
-                    <span className="animate-pulse">🔵</span>
-                    {toTime(activity.timestamp)} — {activity.type === 'trend_detected' ? '📈 Trend detected' : 
-                     activity.type === 'new_message' ? '💬 New message' : '🎫 New ticket'}
+                    {toTime(activity.timestamp)} — {activity.type === 'trend_detected' ? 'Trend detected' : 
+                     activity.type === 'new_message' ? 'New message' : 'New ticket'}
                   </div>
                   <div className="text-slate-600 font-medium">{activity.title.slice(0, 50)}...</div>
                   <div className="text-xs text-blue-600 font-medium">Source: {activity.source}</div>
@@ -583,14 +582,14 @@ function RadarPanel({ data, realtimeActivity = [], sseConnected }: {
               <>
                 {data.recent_tickets && data.recent_tickets.length > 0 && (
                   <div className="border rounded p-3 text-sm">
-                    <div className="font-semibold text-slate-900">🎫 {toTime(data.recent_tickets[0].created_at)} — New ticket</div>
+                    <div className="font-semibold text-slate-900">{toTime(data.recent_tickets[0].created_at)} — New ticket</div>
                     <div className="text-slate-600 font-medium">{data.recent_tickets[0].subject?.slice(0, 50)}...</div>
                   </div>
                 )}
 
                 {data.recent_slack_messages && data.recent_slack_messages.length > 0 && (
                   <div className="border rounded p-3 text-sm">
-                    <div className="font-semibold text-slate-900">💬 {toTime(data.recent_slack_messages[0].created_at)} — New message</div>
+                    <div className="font-semibold text-slate-900">{toTime(data.recent_slack_messages[0].created_at)} — New message</div>
                     <div className="text-slate-600 font-medium">{data.recent_slack_messages[0].text?.slice(0, 50)}...</div>
                   </div>
                 )}
@@ -794,7 +793,7 @@ const AuthenticatedApp: React.FC<{ onBetaAccess: () => void }> = ({ onBetaAccess
         const oneHourAgo = new Date(Date.now() - 60 * 60 * 1000);  // Active alerts
         const twentyFourHoursAgo = new Date(Date.now() - 24 * 60 * 60 * 1000);  // Recent trends
 
-        // 🚨 Active Alerts (1-hour filter - urgent/actionable)
+        // Active Alerts (1-hour filter - urgent/actionable)
         const activeAlerts = topicsWithEvidence.filter((topic: any) => {
           const trendTime = new Date(topic.timestamp);
           return trendTime > oneHourAgo && 
@@ -802,14 +801,14 @@ const AuthenticatedApp: React.FC<{ onBetaAccess: () => void }> = ({ onBetaAccess
                  !dismissedAlerts.has(topic.topic_id);
         });
 
-        // 📈 Recent Trends (24-hour filter - all trends for context)
+        // Recent Trends (24-hour filter - all trends for context)
         const recentTrends = topicsWithEvidence.filter((topic: any) => {
           const trendTime = new Date(topic.timestamp);
           return trendTime > twentyFourHoursAgo;  // Show all trends from last 24h
         });
 
-        setActiveAlerts(activeAlerts);  // ✅ Only urgent recent alerts
-        setTrendingTopics(recentTrends); // ✅ All recent trends for analysis
+        setActiveAlerts(activeAlerts);  // Only urgent recent alerts
+        setTrendingTopics(recentTrends); // All recent trends for analysis
       }
       
       setLastTrendsFetchTime(Date.now());

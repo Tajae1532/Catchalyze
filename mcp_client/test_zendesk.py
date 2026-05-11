@@ -102,24 +102,24 @@ async def create_zendesk_ticket(ticket_data: dict, customer_data: dict):
             )
             
             if response.status_code == 200:
-                print(f"✅ Ticket created successfully")
+                print(f"Ticket created successfully")
                 print(f"   ID: #{ticket_id}")
                 print(f"   Subject: {ticket_data['subject'][:60]}...")
                 print(f"   Priority: {ticket_data['priority']}")
                 print(f"   Customer: {customer_data['name']}")
                 return True
             else:
-                print(f"❌ Ticket creation failed: {response.status_code}")
+                print(f"Ticket creation failed: {response.status_code}")
                 print(f"   Response: {response.text}")
                 return False
                 
         except Exception as e:
-            print(f"❌ Ticket creation failed with exception: {e}")
+            print(f"Ticket creation failed with exception: {e}")
             return False
 
 async def create_refund_issue_tickets():
     """Create refund issue tickets"""
-    print("\n💰 Creating refund issue tickets...")
+    print("\nCreating refund issue tickets...")
     
     success_count = 0
     for i, ticket_data in enumerate(REFUND_ISSUES):
@@ -132,12 +132,12 @@ async def create_refund_issue_tickets():
         # Small delay between tickets
         await asyncio.sleep(3)
     
-    print(f"📊 Created {success_count}/4 refund issue tickets")
+    print(f"Created {success_count}/4 refund issue tickets")
     return success_count
 
 async def create_shoe_page_tickets():
     """Create shoe page issue tickets"""
-    print("\n👟 Creating shoe page issue tickets...")
+    print("\nCreating shoe page issue tickets...")
     
     success_count = 0
     for i, ticket_data in enumerate(SHOE_PAGE_ISSUES):
@@ -150,12 +150,12 @@ async def create_shoe_page_tickets():
         # Small delay between tickets
         await asyncio.sleep(3)
     
-    print(f"📊 Created {success_count}/4 shoe page issue tickets")
+    print(f"Created {success_count}/4 shoe page issue tickets")
     return success_count
 
 async def test_trending_topics_detection():
     """Test if the issues are detected as trending topics"""
-    print("\n📊 Testing trending topics detection...")
+    print("\nTesting trending topics detection...")
     
     # Wait a moment for processing
     await asyncio.sleep(5)
@@ -195,7 +195,7 @@ async def test_trending_topics_detection():
                                 data = json.loads(line[6:])  # Remove 'data: ' prefix
                                 if 'result' in data:
                                     trends = data['result'].get('trends', [])
-                                    print(f"✅ Found {len(trends)} trending topics")
+                                    print(f"Found {len(trends)} trending topics")
                                     
                                     # Look for refund related topics
                                     refund_topics = [t for t in trends if any(
@@ -212,7 +212,7 @@ async def test_trending_topics_detection():
                                     )]
                                     
                                     if refund_topics:
-                                        print(f"💰 Found refund issue trending topic!")
+                                        print(f"Found refund issue trending topic")
                                         for topic in refund_topics:
                                             print(f"   Title: {topic.get('title')}")
                                             print(f"   Keywords: {topic.get('keywords')}")
@@ -220,7 +220,7 @@ async def test_trending_topics_detection():
                                             print(f"   Evidence: {topic.get('evidence_ids', {})}")
                                     
                                     if shoe_topics:
-                                        print(f"👟 Found shoe page trending topic!")
+                                        print(f"Found shoe page trending topic")
                                         for topic in shoe_topics:
                                             print(f"   Title: {topic.get('title')}")
                                             print(f"   Keywords: {topic.get('keywords')}")
@@ -228,7 +228,7 @@ async def test_trending_topics_detection():
                                             print(f"   Evidence: {topic.get('evidence_ids', {})}")
                                     
                                     if not refund_topics and not shoe_topics:
-                                        print("⚠️  No refund or shoe page trending topics detected yet")
+                                        print("No refund or shoe page trending topics detected yet")
                                         # Print all topics for debugging
                                         for i, topic in enumerate(trends):
                                             print(f"   Topic {i+1}: {topic.get('title', 'No title')}")

@@ -21,13 +21,13 @@ async def test_health_endpoint():
         
         if response.status_code == 200:
             data = response.json()
-            print(f"✅ Health check passed")
+            print(f"Health check passed")
             print(f"   - Zendesk configured: {data.get('zendesk_configured', False)}")
             print(f"   - Supabase connected: {data.get('supabase_connected', False)}")
             print(f"   - Available tools: {len(data.get('available_tools', []))}")
             return True
         else:
-            print(f"❌ Health check failed: {response.status_code}")
+            print(f"Health check failed: {response.status_code}")
             print(f"   Response: {response.text}")
             return False
 
@@ -42,13 +42,13 @@ async def test_zendesk_sync():
         
         if response.status_code == 200:
             data = response.json()
-            print(f"✅ Zendesk sync started successfully")
+            print(f"Zendesk sync started successfully")
             print(f"   Status: {data.get('status')}")
             print(f"   Message: {data.get('message')}")
             print(f"   Started at: {data.get('started_at')}")
             return True
         else:
-            print(f"❌ Zendesk sync failed: {response.status_code}")
+            print(f"Zendesk sync failed: {response.status_code}")
             print(f"   Response: {response.text}")
             return False
 
@@ -86,14 +86,14 @@ async def test_zendesk_webhook():
         
         if response.status_code == 200:
             data = response.json()
-            print(f"✅ Zendesk webhook processed successfully")
+            print(f"Zendesk webhook processed successfully")
             print(f"   Status: {data.get('status')}")
             print(f"   Ticket ID: {data.get('ticket_id')}")
             print(f"   Customer ID: {data.get('customer_id')}")
             print(f"   Sentiment Score: {data.get('sentiment_score')}")
             return True
         else:
-            print(f"❌ Zendesk webhook failed: {response.status_code}")
+            print(f"Zendesk webhook failed: {response.status_code}")
             print(f"   Response: {response.text}")
             return False
 
@@ -140,7 +140,7 @@ async def test_ticket_analysis():
                         break
                 
                 if not json_payload_str:
-                    print(f"❌ Ticket analysis failed: No 'data:' line found in SSE response.")
+                    print(f"Ticket analysis failed: No 'data:' line found in SSE response.")
                     print(f"   Full response text: '{response.text}'")
                     return False
 
@@ -148,36 +148,36 @@ async def test_ticket_analysis():
                 
                 # Check for a JSON-RPC error field first within the parsed data
                 if "error" in data:
-                    print(f"❌ Ticket analysis failed (JSON-RPC error): {data.get('error')}")
+                    print(f"Ticket analysis failed (JSON-RPC error): {data.get('error')}")
                     return False
                 
                 # The actual tool result is still nested under 'result.structuredContent'
                 result = data.get("result", {}).get("structuredContent", {})
                 
                 if not result:
-                    print(f"❌ Ticket analysis failed: 'structuredContent' not found or empty in response.")
+                    print(f"Ticket analysis failed: 'structuredContent' not found or empty in response.")
                     print(f"   Full response data: {data}")
                     return False
 
-                print(f"✅ Ticket analysis completed")
+                print(f"Ticket analysis completed")
                 print(f"   Total tickets: {result.get('total_tickets', 0)}")
                 print(f"   Average sentiment: {result.get('average_sentiment', 0)}")
                 print(f"   Status breakdown: {result.get('status_breakdown', {})}")
                 print(f"   Priority breakdown: {result.get('priority_breakdown', {})}")
                 return True
             except json.JSONDecodeError as e:
-                print(f"❌ Ticket analysis failed: JSONDecodeError - {e}")
+                print(f"Ticket analysis failed: JSONDecodeError - {e}")
                 print(f"   Response text was: '{response.text}'")
                 return False
         else:
-            print(f"❌ Ticket analysis request failed: {response.status_code}")
+            print(f"Ticket analysis request failed: {response.status_code}")
             print(f"   Response: {response.text}")
             return False
 
 
 async def main():
     """Run all Zendesk integration tests"""
-    print("🧪 Starting Zendesk Integration Tests")
+    print("Starting Zendesk Integration Tests")
     print("=" * 50)
     
     tests = [
@@ -193,17 +193,17 @@ async def main():
             result = await test()
             results.append(result)
         except Exception as e:
-            print(f"❌ Test {test.__name__} failed with exception: {e}")
+            print(f"Test {test.__name__} failed with exception: {e}")
             results.append(False)
     
     print("\n" + "=" * 50)
-    print("📊 Test Results Summary")
+    print("Test Results Summary")
     print(f"Passed: {sum(results)}/{len(results)}")
     
     if all(results):
-        print("🎉 All Zendesk integration tests passed!")
+        print("All Zendesk integration tests passed.")
     else:
-        print("⚠️  Some tests failed. Check configuration and logs.")
+        print("Some tests failed. Check configuration and logs.")
     
     return all(results)
 
