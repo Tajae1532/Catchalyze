@@ -1,0 +1,18 @@
+{
+  "ticket": {
+    "id": "6",
+    "title": "Checkout process completely broken",
+    "description": "----------------------------------------------\n\nTajae Anderson, Aug 29, 2025, 13:02\n\nHi there,\nI'm trying to complete a purchase but the checkout process is completely broken.\nWhen I click \"Proceed to Checkout\" nothing happens. The page just freezes.\nThis is very frustrating as I need to complete this order urgently.\nPlease help!",
+    "latest_public_comment": "Hi there,\nI'm trying to complete a purchase but the checkout process is completely broken.\nWhen I click \"Proceed to Checkout\" nothing happens. The page just freezes.\nThis is very frustrating as I need to complete this order urgently.\nPlease help!",
+    "status": "open",
+    "priority": "high",
+    "requester": {
+      "id": "40743812441236",
+      "email": "lauraandersonbus@gmail.com",
+      "name": "Laura Anderson"
+    },
+    "tags": ["broken", "checkout", "urgent"],
+    "created_at": "August 29, 2025 at 13:02",
+    "updated_at": "August 29, 2025 at 13:02"
+  }
+}
